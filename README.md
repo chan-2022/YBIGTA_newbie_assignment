@@ -43,11 +43,11 @@ network_assignment/
 ### 1️⃣ 정상 실행 (성공 케이스)
 
 ```bash
-python -m netprobe http://google.com --pretty --json results/google.json
+python -m netprobe http://google.com --pretty --json submission/google.json
 ```
 
 - DNS → TCP → HTTP 단계가 모두 성공
-- `results/google.json` 파일 생성
+- `submission/google.json` 파일 생성
 - JSON의 `stage` 값은 `"ok"`
 
 ---
@@ -57,13 +57,13 @@ python -m netprobe http://google.com --pretty --json results/google.json
 아래 명령은 **의도적으로 TCP 연결 실패**를 발생시킵니다.
 
 ```bash
-python -m netprobe http://google.com:81 --pretty --json results/tcp_fail.json
+python -m netprobe http://google.com:81 --pretty --json submission/tcp_fail.json
 ```
 
 - DNS는 성공
 - TCP 단계에서 통신이 정상적으로 이루어지지 않음 (환경에 따라 즉시 실패 또는 timeout)
 - 프로그램은 크래시 없이 종료
-- `results/tcp_fail.json` 파일 생성
+- `submission/tcp_fail.json` 파일 생성
 - JSON의 `stage` 값은 `"tcp"`
 
 ---
@@ -71,12 +71,12 @@ python -m netprobe http://google.com:81 --pretty --json results/tcp_fail.json
 ### 3️⃣ 실패 케이스 만들기 (DNS 실패)
 
 ```bash
-python -m netprobe http://this-domain-should-not-exist.example --pretty --json results/dns_fail.json
+python -m netprobe http://this-domain-should-not-exist.example --pretty --json submission/dns_fail.json
 ```
 
 - DNS 해석 실패
 - TCP / HTTP 단계는 실행되지 않음
-- `results/dns_fail.json` 파일 생성
+- `submission/dns_fail.json` 파일 생성
 - JSON의 `stage` 값은 `"dns"`
 
 ---
@@ -86,7 +86,7 @@ python -m netprobe http://this-domain-should-not-exist.example --pretty --json r
 모든 실행 결과는 **성공/실패 여부와 관계없이 JSON 파일로 저장**해야 합니다.
 
 ```text
-results/
+submission/
   google.json      # 성공 케이스
   tcp_fail.json    # TCP 실패 케이스
   dns_fail.json    # DNS 실패 케이스
@@ -148,10 +148,10 @@ pytest tests/test_http.py
 - `python -m pytest` 실행 시 **모든 테스트가 성공**해야 함
 
 ### 2️⃣ 결과 파일 생성
-- `results/` 폴더에 아래 JSON 파일이 **모두 존재**해야 함
+- `submission/` 폴더에 아래 JSON 파일이 **모두 존재**해야 함
 
 ```text
-results/
+submission/
   google.json    # stage = "ok"
   tcp_fail.json  # stage = "tcp"
   dns_fail.json  # stage = "dns"
