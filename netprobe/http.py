@@ -40,35 +40,28 @@ def send_and_recv(sock, request: bytes, max_bytes: int) -> bytes:
 
 def parse_status_and_preview(raw: bytes, max_preview: int = 200) -> tuple[Optional[int], str, Optional[str]]:
     """
-    - status line에서 status code만 파싱
-    - body preview는 max_preview bytes만 decode
+    서버의 Raw 응답 데이터를 분석하여 상태 코드와 본문 미리보기를 추출합니다. 
+    
+    요구사항:
+    1. 헤더와 바디를 구분하는 CRLF 2번(b"\\r\\n\\r\\n")의 위치를 찾으세요. 
+    2. 헤더 영역을 decode한 뒤, Status Line(첫 줄)에서 상태 코드를 추출하세요. 
+    3. 바디 영역에서 max_preview 만큼의 데이터를 decode하여 반환하세요. 
+    4. 규격에 맞지 않는 데이터가 들어올 경우 적절한 에러 메시지를 반환하세요. 
     """
+    
     ###########################################################
-    # TODO: raw 데이터에서 헤더와 바디의 경계인 '\r\n\r\n'의 위치(index)를 찾으세요.
-    # HINT: bytes 객체의 .find() 메서드를 사용하세요.
+    # TODO: HTTP 응답 파싱 로직 전체를 직접 구현하세요.
+    # 1. b"\r\n\r\n"를 기준으로 헤더와 바디를 분리합니다.
+    # 2. 첫 줄(Status Line)에서 상태 코드(int)를 추출합니다. 
+    # 3. 바디 영역을 max_preview 만큼 decode하여 preview를 만듭니다. 
 
-    sep = -1 # TODO: sep 값을 수정하세요
+    # HINT 1: raw.find(b"\\r\\n\\r\\n")으로 헤더와 바디의 경계를 나눕니다.
+    # HINT 2: header.split("\\r\\n")의 첫 번째 줄을 다시 공백으로 split하면 상태 코드를 찾을 수 있습니다.
+
+    status_code = None
+    preview = ""
+    error = None
 
     ###########################################################
-
-    if sep == -1:
-        return None, "", "Invalid HTTP response: missing header separator"
-
-    header = raw[:sep].decode("iso-8859-1", errors="replace")
-    body = raw[sep + 4:]
-
-    lines = header.split("\r\n")
-    if not lines or not lines[0]:
-        return None, "", "Invalid HTTP response: empty status line"
-
-    parts = lines[0].split()
-    if len(parts) < 2:
-        return None, "", "Invalid HTTP status line"
-
-    try:
-        status_code = int(parts[1])
-    except ValueError:
-        return None, "", "Invalid status code"
-
-    preview = body[:max_preview].decode("utf-8", errors="ignore")
-    return status_code, preview, None
+    
+    return status_code, preview, error

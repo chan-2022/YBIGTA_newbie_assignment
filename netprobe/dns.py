@@ -26,26 +26,19 @@ def resolve(host: str) -> tuple[list[str], Optional[str]]:
 
 def pick_ip(ips: list[str], prefer: str = "any") -> Optional[str]:
     """
-    prefer 정책에 따라 리스트에서 가장 적절한 IP 하나를 선택합니다.
+    주어진 IP 리스트 중 prefer 정책에 맞는 최적의 IP 하나를 선택하여 반환합니다. 
+    
+    요구사항:
+    1. prefer가 "ipv4"인 경우: 리스트에서 가장 먼저 발견되는 IPv4 주소(:가 없는 주소)를 반환합니다. 
+    2. prefer가 "ipv6"인 경우: 리스트에서 가장 먼저 발견되는 IPv6 주소(:가 있는 주소)를 반환합니다. 
+    3. 정책에 맞는 주소가 없거나 prefer가 "any"인 경우: 리스트의 첫 번째 주소를 반환합니다. 
     """
     if not ips:
         return None
 
-    if prefer == "any":
-        return ips[0]
-
     ###########################################################
-    # TODO: prefer 값(ipv4, ipv6)에 따라 적절한 IP를 반환하는 로직을 작성하세요.
-    # - 'ipv4': ':'이 없는 주소 우선
-    # - 'ipv6': ':'이 있는 주소 우선
-    # HINT: Python의 'in' 혹은 'not in' 연산자로 ':' 포함 여부를 확인하세요.
-
-    if prefer == "ipv4":
-        pass #TODO
-
-    elif prefer == "ipv6":
-        pass #TODO
-
+    # TODO: prefer 정책에 따른 IP 선택 로직을 직접 구현하세요.
+    # HINT: 리스트를 순회하며 조건문(if)으로 주소 형식을 검사해야 합니다.
     ###########################################################
 
     return ips[0]

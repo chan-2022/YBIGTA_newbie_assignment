@@ -52,7 +52,13 @@ def connect_one(ip: str, port: int, timeout: float):
 
 def connect_with_fallback(ips: list[str], port: int, timeout: float, prefer: str = "any") -> TCPConnectResult:
     """
-    연결이 성공할 때까지 IP 후보들을 순회합니다.
+    여러 IP 후보를 순회하며 TCP 연결이 성공할 때까지 시도합니다. (Fallback 메커니즘) 
+    
+    요구사항:
+    1. prefer 정책(ipv4/ipv6)에 따라 IP 순회 순서(ordered list)를 결정하세요. 
+    2. connect_one 함수를 사용하여 각 IP에 대해 연결을 시도하세요. 
+    3. 연결 성공 시, 해당 소켓에서 local/peer 주소 정보를 추출하여 결과 객체를 반환하세요. 
+    4. 모든 IP에 대해 실패할 경우 마지막 에러 메시지를 담아 반환하세요. 
     """
     if not ips:
         return TCPConnectResult(
@@ -61,43 +67,16 @@ def connect_with_fallback(ips: list[str], port: int, timeout: float, prefer: str
             error="No IPs to connect", sock=None
         )
 
-    v4 = [ip for ip in ips if ":" not in ip]
-    v6 = [ip for ip in ips if ":" in ip]
-
-    if prefer == "ipv4":
-        ordered = v4 + v6
-    elif prefer == "ipv6":
-        ordered = v6 + v4
-    else:
-        ordered = ips[:]
+    # TODO 1: prefer 정책에 따라 v4, v6 주소의 우선순위가 반영된 ordered 리스트를 만드세요.
+    # HINT: ':' 가 포함된 IP는 IPv6, '.' 이 포함된 IP는 IPv4 입니다.
+    ordered = [] 
 
     last_err: Optional[str] = None
     for ip in ordered:
-        sock, ms, err = connect_one(ip, port, timeout)
-        if sock is not None:
-            # local/peer addr 기록
-            try:
-                ###########################################################
-                # TODO: 성공한 소켓에서 내 주소(local)와 서버 주소(peer) 정보를 추출하세요.
-                # HINT: sock.getsockname()과 sock.getpeername()을 활용하세요.
-
-                local = None  # TODO
-                peer = None   # TODO
-                local_addr = (None, None) # TODO
-                peer_addr = (None, None)  # TODO
-                
-                ###########################################################
-
-            except Exception:
-                local_addr = None
-                peer_addr = None
-
-            return TCPConnectResult(
-                ip=ip, port=port, connect_ms=ms,
-                local_addr=local_addr, peer_addr=peer_addr,
-                error=None, sock=sock
-            )
-        last_err = err
+        # TODO 2: connect_one을 호출하여 연결을 시도하고, 성공 시 정보를 추출하여 반환하세요.
+        # HINT 1: connect_one은 성공 시 (sock, connect_ms), 실패 시 (None, error_message)를 반환합니다.
+        # HINT 2: sock.getsockname()과 sock.getpeername()을 활용하세요. 
+        pass # TODO: 로직 구현
 
     return TCPConnectResult(
         ip=ordered[-1] if ordered else None,
