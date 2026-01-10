@@ -15,7 +15,7 @@ def resolve(host: str) -> tuple[list[str], Optional[str]]:
         # TODO: sockaddr에서 IP 주소만 추출하여 리스트(ips)로 만드세요.
         # HINT: 리스트 컴프리헨션을 사용하여 sockaddr[0] 값을 가져오세요.
 
-        ips = [] # TODO: [이곳에 IP 리스트 생성 코드를 작성하세요]
+        ips = [info[4][0] for info in infos]
 
         ###########################################################
 
@@ -40,5 +40,15 @@ def pick_ip(ips: list[str], prefer: str = "any") -> Optional[str]:
     # TODO: prefer 정책에 따른 IP 선택 로직을 직접 구현하세요.
     # HINT: 리스트를 순회하며 조건문(if)으로 주소 형식을 검사해야 합니다.
     ###########################################################
+
+    if prefer == "ipv4":
+        for ip in ips:
+            if ":" not in ip:
+                return ip
+            
+    elif prefer == "ipv6":
+        for ip in ips: 
+            if ":" in ip:
+                return ip 
 
     return ips[0]

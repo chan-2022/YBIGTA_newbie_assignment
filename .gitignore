@@ -34,3 +34,6 @@ dist/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Local run notes - do not upload
+RUNNING.md

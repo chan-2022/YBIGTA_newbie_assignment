@@ -14,7 +14,8 @@ def build_request(host: str, path: str) -> bytes:
     # TODO: HTTP/1.1 규격에 맞게 요청 문자열(GET, Host, Connection 헤더 포함)을 완성하세요.
     # HINT: 각 줄의 끝은 \r\n이며, 헤더의 끝에는 빈 줄(\r\n)이 하나 더 필요합니다.
     
-    req = () # TODO: (이곳에 요청 문자열을 작성하세요)
+    # TODO: (이곳에 요청 문자열을 작성하세요)
+    req = f"GET {path} HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\n\r\n"
     
     ###########################################################
 
@@ -57,9 +58,27 @@ def parse_status_and_preview(raw: bytes, max_preview: int = 200) -> tuple[Option
 
     # HINT 1: raw.find(b"\\r\\n\\r\\n")으로 헤더와 바디의 경계를 나눕니다.
     # HINT 2: header.split("\\r\\n")의 첫 번째 줄을 다시 공백으로 split하면 상태 코드를 찾을 수 있습니다.
+    delimiter = b"\r\n\r\n"
+    split_index = raw.find(delimiter)
+    
+    if split_index == -1:
+        return None, "", "적절하지 않은 데이터입니다"
+    
+    header_bytes = raw[:split_index]
+    body_bytes = raw[split_index + 4:]
 
-    status_code = None
-    preview = ""
+    header_str = header_bytes.decode("utf-8")
+    status_line = header_str.split("\r\n")[0]
+
+    status_parts = status_line.split(" ")
+    if len(status_parts) < 2:
+             return None, "", "Invalid Status Line"
+             
+    status_code = int(status_parts[1])
+    preview_bytes = body_bytes[:max_preview]
+
+    preview = preview_bytes.decode("utf-8", errors="replace") 
+        
     error = None
 
     ###########################################################
