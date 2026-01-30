@@ -31,17 +31,15 @@ Direct Prompting, CoT(Chain of Thought) Prompting, 그리고 제안하는 **My P
 
 ---
 
-## 3. 심층 분석
+## 3. 이론 vs 실제 : Direct Prompting vs CoT Prompting 
 
-### 3.1 이론 vs 실제 : Direct Prompting vs CoT Prompting 
-
-#### 3.1.1 이론적으로 무엇이 더 우수한가? 
+### 3.1 이론적으로 무엇이 더 우수한가? 
 이론적으로는 CoT Prompting이 Direct Prompting보다 우수한 것으로 알려져 있다. 그 이유는 다음과 같다. 
 1.  **문제 분해:** 복잡한 수학 문제를 "Think step by step" 지시를 통해 작은 논리 단계로 나누어 해결한다.
 2.  **오류 수정:** 중간 추론 과정을 통해 논리적 비약을 방지하고 스스로 검증할 기회를 갖는다.
 
 
-#### 3.1.2 실제 실험 결과 비교 
+### 3.2 실제 실험 결과 비교 
 하지만 표를 참고하면, 0,3shot에서 Direct Prompting의 결과가 더 우수했다. 그 이유를 간접적으로 추론하면 다음과 같다. 
 1. **Over-Reasoning** : Direct Prompting의 결과가 이미 좋다. 직관적인 문제 해결 능력이 뛰어나다는 것인데, 여기서 추론과정을 또 추가하는 것이 불필요한 연산 과정을 유발하여 오답률을 높인 것으로 보인다. 
 2. **Context Dilution** : 경량 모델이 핵심 지시사항보다 예시의 Noise에 주의를 뺏긴 것으로 보인다. 
